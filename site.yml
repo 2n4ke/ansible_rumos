@@ -2,6 +2,10 @@
 
 - hosts: all
   become: true
+  pre_tasks:
+
+- hosts: web_servers
+  become: true
   tasks:
 
   - name: install apache and php for Ubuntu servers
@@ -10,5 +14,4 @@
         - apache2
         - libapache2-mod-php
       state: latest
-      update_cache: yes
     when: ansible_distribution == "Ubuntu"
