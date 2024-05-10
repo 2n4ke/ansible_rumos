@@ -1,0 +1,38 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      update_cache: yes
+      changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
+- hosts: all
+  become: true
+  tasks:
+
+  - name: create maia user
+    tags: always
+    user:
+      name: maia
+      groups: root
+
+  - name: add ssh key for maia
+    tags: always
+    authorized_key:
+      user: maia
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDdboX9+asoCDxgxMNGGQGM7K1ogBlFMVB3zXhWxbEjr ansible"
+
+  - name: add sudoers file for maia
+    tags: always
+    copy:
+      src: sudoer_maia
+      dest: /etc/sudoers.d/maia
+      owner: root
+      group: root
+      mode: 0440
+
